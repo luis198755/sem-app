@@ -9,6 +9,8 @@ const SemaforoBits = () => {
   const [tiempos, setTiempos] = useState([]);
   const [eventos, setEventos] = useState([]);
   const [numerosSemaforos, setNumerosSemaforos] = useState([]); // New state to store traffic light numbers
+  const [tiemposPorCiclo, setTiemposPorCiclo] = useState([]);
+  
 
   const etiquetas = [
     "Escenario P",
@@ -36,6 +38,10 @@ const SemaforoBits = () => {
       })
     );
     setTiempos(nuevosTiempos);
+
+    setTiemposPorCiclo(nuevosTiempos);
+
+
   }, [numEscenarios, numCiclos]);
 
   useEffect(() => {
@@ -73,6 +79,13 @@ const SemaforoBits = () => {
     const nuevosTiempos = [...tiempos];
     nuevosTiempos[ciclo][escenario] = parseFloat(valor);
     setTiempos(nuevosTiempos);
+
+    // Update tiemposPorCiclo
+    setTiemposPorCiclo(prevTiempos => {
+      const nuevosTiemposPorCiclo = [...prevTiempos];
+      nuevosTiemposPorCiclo[ciclo][escenario] = parseFloat(valor);
+      return nuevosTiemposPorCiclo;
+    });
   };
 
   const getBitValue = (numero, position) => {
@@ -302,6 +315,17 @@ const SemaforoBits = () => {
           </div>
         ))}
       </div>
+
+      <div className="mb-6">
+  <h2 className="text-xl font-semibold mb-3">Tiempos por Ciclo</h2>
+  <textarea
+    className="w-full h-40 p-2 border rounded"
+    readOnly
+    value={tiemposPorCiclo.map((ciclo, index) => 
+      `Ciclo ${index + 1}: [${ciclo.join(', ')}]`
+    ).join('\n')}
+  />
+</div>
     </div>
   );
 };
