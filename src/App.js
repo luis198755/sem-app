@@ -59,15 +59,16 @@ const SemaforoBits = () => {
         "1": [numSemaforos]
       },
       escenarios: {
-        "1": escenarios
+        "1": [0, ...escenarios] // Agregar un cero al inicio del array de escenarios
       },
       ciclos: {},
       eventos: {}
     };
 
     // Agregar ciclos
+    // Agregar ciclos con un cero al inicio de cada array
     tiemposPorCiclo.forEach((ciclo, index) => {
-      json.ciclos[index + 1] = ciclo;
+      json.ciclos[index + 1] = [0, ...ciclo];
     });
 
     // Agregar eventos
