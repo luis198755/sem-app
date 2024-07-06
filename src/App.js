@@ -8,6 +8,7 @@ const SemaforoBits = () => {
   const [escenarios, setEscenarios] = useState([]);
   const [tiempos, setTiempos] = useState([]);
   const [eventos, setEventos] = useState([]);
+  const [numerosSemaforos, setNumerosSemaforos] = useState([]); // New state to store traffic light numbers
 
   const etiquetas = [
     "Escenario P",
@@ -25,6 +26,7 @@ const SemaforoBits = () => {
   useEffect(() => {
     const totalEscenarios = numEscenarios * 10;
     setEscenarios(Array(totalEscenarios).fill(0));
+    setNumerosSemaforos(Array(totalEscenarios).fill(0)); // Initialize numerosSemaforos
 
     const nuevosTiempos = Array(numCiclos).fill().map(() =>
       Array(totalEscenarios).fill().map((_, index) => {
@@ -82,6 +84,14 @@ const SemaforoBits = () => {
       const newEscenarios = [...prevEscenarios];
       newEscenarios[escenarioIndex] = newEscenarios[escenarioIndex] ^ (1 << position);
       newEscenarios[escenarioIndex] = newEscenarios[escenarioIndex] >>> 0;
+      
+      // Update numerosSemaforos when toggling bits
+      setNumerosSemaforos(prevNumeros => {
+        const newNumeros = [...prevNumeros];
+        newNumeros[escenarioIndex] = newEscenarios[escenarioIndex];
+        return newNumeros;
+      });
+      
       return newEscenarios;
     });
   };
@@ -93,6 +103,14 @@ const SemaforoBits = () => {
       setEscenarios(prevEscenarios => {
         const newEscenarios = [...prevEscenarios];
         newEscenarios[escenarioIndex] = valor;
+        
+        // Update numerosSemaforos when changing input
+        setNumerosSemaforos(prevNumeros => {
+          const newNumeros = [...prevNumeros];
+          newNumeros[escenarioIndex] = valor;
+          return newNumeros;
+        });
+        
         return newEscenarios;
       });
     }
@@ -182,27 +200,13 @@ const SemaforoBits = () => {
             <h3 className={`text-lg font-medium mb-2 p-2 rounded ${etiquetaColorClass}`}>
               Escenario {index + 1} - {etiqueta}
             </h3>
-            {/* <div className="mb-4">
-              <label htmlFor={`numero-${index}`} className="block mb-2">Número representado (0 a 4294967295):</label>
-              <input
-                type="number"
-                id={`numero-${index}`}
-                value={numero}
-                onChange={(e) => handleInputChange(index, e)}
-                className="w-full p-2 border rounded"
-                min="0"
-                max="4294967295"
-              />
-            </div> */}
             <div className="flex justify-center mb-4">
               {renderSemaforos(numero, index)}
             </div>
-            {/* <div className="text-center space-y-2">
-              <p>Representación binaria: {numero.toString(2).padStart(32, '0')}</p>
-              <p>Bits representados: {numero.toString(2).padStart(32, '0').slice(0, numSemaforos * 3)}</p>
-              <p>Valor decimal: {numero}</p>
-              <p>Valor hexadecimal: 0x{numero.toString(16).toUpperCase().padStart(8, '0')}</p>
-            </div> */}
+            <div className="text-center space-y-2">
+              <p>Valor decimal: {numerosSemaforos[index]}</p>
+              <p>Valor hexadecimal: 0x{numerosSemaforos[index].toString(16).toUpperCase().padStart(8, '0')}</p>
+            </div>
             <div className="mt-4">
               <h4 className="font-medium mb-2">Tiempos por ciclo (segundos):</h4>
               <div className="grid grid-cols-4 gap-2">
