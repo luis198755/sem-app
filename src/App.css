@@ -89,3 +89,43 @@
     margin: 1px 0;
   }
 }
+
+/* ... (previous CSS remains unchanged) */
+
+.cycle-times-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+}
+
+.cycle-time-input {
+  display: flex;
+  flex-direction: column;
+}
+
+.cycle-label {
+  font-size: 0.9rem;
+  margin-bottom: 4px;
+}
+
+/* Responsive design for inputs */
+@media (max-width: 600px) {
+  .cycle-times-grid {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  }
+
+  .cycle-label {
+    font-size: 0.8rem;
+  }
+
+  input[type="number"] {
+    font-size: 0.9rem;
+    padding: 4px;
+  }
+}
+
+@media (max-width: 400px) {
+  .cycle-times-grid {
+    grid-template-columns: 1fr;
+  }
+}

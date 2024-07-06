@@ -189,7 +189,7 @@ const SemaforoBits = () => {
   };
 
   return (
-    <div className="p-6 mx-auto">
+    <div className="p-6 mx-auto">  
       <h1 className="text-2xl font-bold mb-4">Semáforos de Bits Interactivos (Con Ciclos, Tiempos y Eventos)</h1>
       <div className="mb-4">
         <label htmlFor="numSemaforos" className="block mb-2">Número de semáforos a mostrar:</label>
@@ -244,21 +244,17 @@ const SemaforoBits = () => {
             <div className="traffic-lights-container flex flex-wrap justify-center">
               {renderSemaforos(numero, index)}
             </div>
-            {/* <div className="text-center space-y-2">
-              <p>Valor decimal: {numerosSemaforos[index]}</p>
-              <p>Valor hexadecimal: 0x{numerosSemaforos[index].toString(16).toUpperCase().padStart(8, '0')}</p>
-            </div> */}
             <div className="mt-4">
               <h4 className="font-medium mb-2">Tiempos por ciclo (segundos):</h4>
-              <div className="grid grid-cols-4 gap-2">
+              <div className="cycle-times-grid">
                 {tiempos.map((ciclo, cicloIndex) => (
-                  <div key={cicloIndex} className="flex items-center">
-                    <span className="mr-2">Ciclo {cicloIndex + 1}:</span>
+                  <div key={cicloIndex} className="cycle-time-input">
+                    <span className="cycle-label">Ciclo {cicloIndex + 1}:</span>
                     <input
                       type="number"
                       value={ciclo[index]}
                       onChange={(e) => handleTiempoChange(cicloIndex, index, e.target.value)}
-                      className="w-20 p-1 border rounded"
+                      className="w-full p-1 border rounded"
                       step="0.001"
                       min="0"
                       disabled={etiquetaIndex !== 0}
@@ -270,6 +266,7 @@ const SemaforoBits = () => {
           </div>
         );
       })}
+
 
       <div className="mb-4">
         <label htmlFor="numEventos" className="block mb-2">Número de Eventos:</label>
