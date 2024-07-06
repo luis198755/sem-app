@@ -163,23 +163,27 @@ const SemaforoBits = () => {
       const yellowBit = 30 - index * 3;
       const greenBit = 29 - index * 3;
       return (
-        <div key={index} className="traffic-light flex flex-col items-center justify-between bg-gray-200 rounded-full">
-          <div
-            className={`light red ${getBitValue(numero, redBit) ? 'bg-red-500' : 'bg-gray-400'} cursor-pointer rounded-full`}
-            onClick={() => toggleBit(escenarioIndex, redBit)}
-          ></div>
-          <div
-            className={`light yellow ${getBitValue(numero, yellowBit) ? 'bg-yellow-500' : 'bg-gray-400'} cursor-pointer rounded-full`}
-            onClick={() => toggleBit(escenarioIndex, yellowBit)}
-          ></div>
-          <div
-            className={`light green ${getBitValue(numero, greenBit) ? 'bg-green-500' : 'bg-gray-400'} cursor-pointer rounded-full`}
-            onClick={() => toggleBit(escenarioIndex, greenBit)}
-          ></div>
+        <div key={index} className="traffic-light-container">
+          <div className="traffic-light-label">S{index + 1}</div>
+          <div className="traffic-light flex flex-col items-center justify-between bg-gray-200 rounded-full">
+            <div
+              className={`light red ${getBitValue(numero, redBit) ? 'bg-red-500' : 'bg-gray-400'} cursor-pointer rounded-full`}
+              onClick={() => toggleBit(escenarioIndex, redBit)}
+            ></div>
+            <div
+              className={`light yellow ${getBitValue(numero, yellowBit) ? 'bg-yellow-500' : 'bg-gray-400'} cursor-pointer rounded-full`}
+              onClick={() => toggleBit(escenarioIndex, yellowBit)}
+            ></div>
+            <div
+              className={`light green ${getBitValue(numero, greenBit) ? 'bg-green-500' : 'bg-gray-400'} cursor-pointer rounded-full`}
+              onClick={() => toggleBit(escenarioIndex, greenBit)}
+            ></div>
+          </div>
         </div>
       );
     });
   };
+
 
   const getEtiquetaColor = (etiqueta) => {
     if (etiqueta.startsWith("Escenario P")) return "bg-blue-200";
