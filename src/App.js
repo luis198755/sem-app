@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import './App.css';  // Add this line at the top of your component file
 
 
@@ -10,9 +10,8 @@ const SemaforoBits = () => {
   const [escenarios, setEscenarios] = useState([]);
   const [tiempos, setTiempos] = useState([]);
   const [eventos, setEventos] = useState([]);
-  const [numerosSemaforos, setNumerosSemaforos] = useState([]); // New state to store traffic light numbers
+  const [numerosSemaforos, setNumerosSemaforos] = useState([]);
   const [tiemposPorCiclo, setTiemposPorCiclo] = useState([]);
-
 
   const etiquetas = [
     "Escenario P",
@@ -27,10 +26,10 @@ const SemaforoBits = () => {
     "Ambar"
   ];
 
-  useEffect(() => {
+  const resetAllValues = useCallback(() => {
     const totalEscenarios = numEscenarios * 10;
     setEscenarios(Array(totalEscenarios).fill(0));
-    setNumerosSemaforos(Array(totalEscenarios).fill(0)); // Initialize numerosSemaforos
+    setNumerosSemaforos(Array(totalEscenarios).fill(0));
 
     const nuevosTiempos = Array(numCiclos).fill().map(() =>
       Array(totalEscenarios).fill().map((_, index) => {
@@ -40,20 +39,19 @@ const SemaforoBits = () => {
       })
     );
     setTiempos(nuevosTiempos);
-
     setTiemposPorCiclo(nuevosTiempos);
 
-
-  }, [numEscenarios, numCiclos]);
-
-  useEffect(() => {
     setEventos(Array(numEventos).fill().map(() => ({
       hora: 0,
       minuto: 0,
       cicloSeleccionado: 1,
       offset: 0
     })));
-  }, [numEventos]);
+  }, [numEscenarios, numCiclos, numEventos]);
+
+  useEffect(() => {
+    resetAllValues();
+  }, [numSemaforos, resetAllValues]);
 
   const generateStructuredJSON = () => {
     const json = {
@@ -82,7 +80,8 @@ const SemaforoBits = () => {
   };
 
   const handleSemaforosChange = (e) => {
-    setNumSemaforos(parseInt(e.target.value, 10));
+    const newNumSemaforos = parseInt(e.target.value, 10);
+    setNumSemaforos(newNumSemaforos);
   };
 
   const handleEscenariosChange = (e) => {
@@ -193,7 +192,7 @@ const SemaforoBits = () => {
   };
 
   return (
-    <div className="p-6 mx-auto">  
+    <div className="p-4 mx-auto">
       <h1 className="text-2xl font-bold mb-4">Semáforos de Bits Interactivos (Con Ciclos, Tiempos y Eventos)</h1>
       <div className="mb-4">
         <label htmlFor="numSemaforos" className="block mb-2">Número de semáforos a mostrar:</label>
