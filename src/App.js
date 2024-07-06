@@ -242,10 +242,10 @@ const SemaforoBits = () => {
             <div className="flex justify-center mb-4">
               {renderSemaforos(numero, index)}
             </div>
-            <div className="text-center space-y-2">
+            {/* <div className="text-center space-y-2">
               <p>Valor decimal: {numerosSemaforos[index]}</p>
               <p>Valor hexadecimal: 0x{numerosSemaforos[index].toString(16).toUpperCase().padStart(8, '0')}</p>
-            </div>
+            </div> */}
             <div className="mt-4">
               <h4 className="font-medium mb-2">Tiempos por ciclo (segundos):</h4>
               <div className="grid grid-cols-4 gap-2">
