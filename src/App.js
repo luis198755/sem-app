@@ -53,6 +53,31 @@ const SemaforoBits = () => {
     })));
   }, [numEventos]);
 
+  const generateStructuredJSON = () => {
+    const json = {
+      fases: {
+        "1": [numSemaforos]
+      },
+      escenarios: {
+        "1": escenarios
+      },
+      ciclos: {},
+      eventos: {}
+    };
+
+    // Agregar ciclos
+    tiemposPorCiclo.forEach((ciclo, index) => {
+      json.ciclos[index + 1] = ciclo;
+    });
+
+    // Agregar eventos
+    eventos.forEach((evento, index) => {
+      json.eventos[index + 1] = [evento.hora, evento.minuto, evento.cicloSeleccionado, evento.offset];
+    });
+
+    return JSON.stringify(json, null, 2);
+  };
+
   const handleSemaforosChange = (e) => {
     setNumSemaforos(parseInt(e.target.value, 10));
   };
@@ -317,6 +342,15 @@ const SemaforoBits = () => {
       </div>
 
       <div className="mb-6">
+        <h2 className="text-xl font-semibold mb-3">Escenarios</h2>
+        <textarea
+          className="w-full h-40 p-2 border rounded"
+          readOnly
+          value={`Escenarios: [${escenarios.join(', ')}]`}
+        />
+      </div>
+
+      <div className="mb-6">
         <h2 className="text-xl font-semibold mb-3">Tiempos por Ciclo</h2>
         <textarea
           className="w-full h-40 p-2 border rounded"
@@ -328,15 +362,6 @@ const SemaforoBits = () => {
       </div>
 
       <div className="mb-6">
-        <h2 className="text-xl font-semibold mb-3">Escenarios</h2>
-        <textarea
-          className="w-full h-40 p-2 border rounded"
-          readOnly
-          value={`Escenarios: [${escenarios.join(', ')}]`}
-        />
-      </div>
-
-      <div className="mb-6">
         <h2 className="text-xl font-semibold mb-3">Eventos</h2>
         <textarea
           className="w-full h-40 p-2 border rounded"
@@ -344,6 +369,15 @@ const SemaforoBits = () => {
           value={eventos.map((evento, index) =>
             `Evento${index + 1} = [${evento.hora}, ${evento.minuto}, ${evento.cicloSeleccionado}, ${evento.offset}]`
           ).join('\n')}
+        />
+      </div>
+
+      <div className="mb-6">
+        <h2 className="text-xl font-semibold mb-3">JSON Estructurado</h2>
+        <textarea
+          className="w-full h-80 p-2 border rounded"
+          readOnly
+          value={generateStructuredJSON()}
         />
       </div>
     </div>
