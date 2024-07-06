@@ -10,7 +10,7 @@ const SemaforoBits = () => {
   const [eventos, setEventos] = useState([]);
   const [numerosSemaforos, setNumerosSemaforos] = useState([]); // New state to store traffic light numbers
   const [tiemposPorCiclo, setTiemposPorCiclo] = useState([]);
-  
+
 
   const etiquetas = [
     "Escenario P",
@@ -97,14 +97,14 @@ const SemaforoBits = () => {
       const newEscenarios = [...prevEscenarios];
       newEscenarios[escenarioIndex] = newEscenarios[escenarioIndex] ^ (1 << position);
       newEscenarios[escenarioIndex] = newEscenarios[escenarioIndex] >>> 0;
-      
+
       // Update numerosSemaforos when toggling bits
       setNumerosSemaforos(prevNumeros => {
         const newNumeros = [...prevNumeros];
         newNumeros[escenarioIndex] = newEscenarios[escenarioIndex];
         return newNumeros;
       });
-      
+
       return newEscenarios;
     });
   };
@@ -116,14 +116,14 @@ const SemaforoBits = () => {
       setEscenarios(prevEscenarios => {
         const newEscenarios = [...prevEscenarios];
         newEscenarios[escenarioIndex] = valor;
-        
+
         // Update numerosSemaforos when changing input
         setNumerosSemaforos(prevNumeros => {
           const newNumeros = [...prevNumeros];
           newNumeros[escenarioIndex] = valor;
           return newNumeros;
         });
-        
+
         return newEscenarios;
       });
     }
@@ -317,15 +317,35 @@ const SemaforoBits = () => {
       </div>
 
       <div className="mb-6">
-  <h2 className="text-xl font-semibold mb-3">Tiempos por Ciclo</h2>
-  <textarea
-    className="w-full h-40 p-2 border rounded"
-    readOnly
-    value={tiemposPorCiclo.map((ciclo, index) => 
-      `Ciclo ${index + 1}: [${ciclo.join(', ')}]`
-    ).join('\n')}
-  />
-</div>
+        <h2 className="text-xl font-semibold mb-3">Tiempos por Ciclo</h2>
+        <textarea
+          className="w-full h-40 p-2 border rounded"
+          readOnly
+          value={tiemposPorCiclo.map((ciclo, index) =>
+            `Ciclo ${index + 1}: [${ciclo.join(', ')}]`
+          ).join('\n')}
+        />
+      </div>
+
+      <div className="mb-6">
+        <h2 className="text-xl font-semibold mb-3">Escenarios</h2>
+        <textarea
+          className="w-full h-40 p-2 border rounded"
+          readOnly
+          value={`Escenarios: [${escenarios.join(', ')}]`}
+        />
+      </div>
+
+      <div className="mb-6">
+        <h2 className="text-xl font-semibold mb-3">Eventos</h2>
+        <textarea
+          className="w-full h-40 p-2 border rounded"
+          readOnly
+          value={eventos.map((evento, index) =>
+            `Evento${index + 1} = [${evento.hora}, ${evento.minuto}, ${evento.cicloSeleccionado}, ${evento.offset}]`
+          ).join('\n')}
+        />
+      </div>
     </div>
   );
 };
