@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import './App.css';  // Add this line at the top of your component file
+
 
 const SemaforoBits = () => {
   const [numSemaforos, setNumSemaforos] = useState(10);
@@ -161,17 +163,17 @@ const SemaforoBits = () => {
       const yellowBit = 30 - index * 3;
       const greenBit = 29 - index * 3;
       return (
-        <div key={index} className="w-8 h-20 mx-1 rounded-full flex flex-col items-center justify-between bg-gray-200">
+        <div key={index} className="traffic-light flex flex-col items-center justify-between bg-gray-200 rounded-full">
           <div
-            className={`w-6 h-6 rounded-full ${getBitValue(numero, redBit) ? 'bg-red-500' : 'bg-gray-400'} cursor-pointer`}
+            className={`light red ${getBitValue(numero, redBit) ? 'bg-red-500' : 'bg-gray-400'} cursor-pointer rounded-full`}
             onClick={() => toggleBit(escenarioIndex, redBit)}
           ></div>
           <div
-            className={`w-6 h-6 rounded-full ${getBitValue(numero, yellowBit) ? 'bg-yellow-500' : 'bg-gray-400'} cursor-pointer`}
+            className={`light yellow ${getBitValue(numero, yellowBit) ? 'bg-yellow-500' : 'bg-gray-400'} cursor-pointer rounded-full`}
             onClick={() => toggleBit(escenarioIndex, yellowBit)}
           ></div>
           <div
-            className={`w-6 h-6 rounded-full ${getBitValue(numero, greenBit) ? 'bg-green-500' : 'bg-gray-400'} cursor-pointer`}
+            className={`light green ${getBitValue(numero, greenBit) ? 'bg-green-500' : 'bg-gray-400'} cursor-pointer rounded-full`}
             onClick={() => toggleBit(escenarioIndex, greenBit)}
           ></div>
         </div>
@@ -187,7 +189,7 @@ const SemaforoBits = () => {
   };
 
   return (
-    <div className="p-4 max-w-3xl mx-auto">
+    <div className="p-6 mx-auto">
       <h1 className="text-2xl font-bold mb-4">Semáforos de Bits Interactivos (Con Ciclos, Tiempos y Eventos)</h1>
       <div className="mb-4">
         <label htmlFor="numSemaforos" className="block mb-2">Número de semáforos a mostrar:</label>
@@ -235,11 +237,11 @@ const SemaforoBits = () => {
         const etiqueta = etiquetaIndex === 0 ? `Escenario P${grupoIndex + 1}` : etiquetas[etiquetaIndex];
         const etiquetaColorClass = getEtiquetaColor(etiqueta);
         return (
-          <div key={index} className="mb-6 p-3 border-t">
-            <h3 className={`text-lg font-medium mb-2 p-2 rounded ${etiquetaColorClass}`}>
+          <div key={index} className="mb-8 p-4 border-t">
+            <h3 className={`text-xl font-medium mb-3 p-3 rounded ${etiquetaColorClass}`}>
               Escenario {index + 1} - {etiqueta}
             </h3>
-            <div className="flex justify-center mb-4">
+            <div className="traffic-lights-container flex flex-wrap justify-center">
               {renderSemaforos(numero, index)}
             </div>
             {/* <div className="text-center space-y-2">
