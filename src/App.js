@@ -7,11 +7,14 @@ const SemaforoBits = () => {
   const [numEscenarios, setNumEscenarios] = useState(1);
   const [numCiclos, setNumCiclos] = useState(1);
   const [numEventos, setNumEventos] = useState(1);
-  const [escenarios, setEscenarios] = useState([]);
-  const [tiempos, setTiempos] = useState([]);
-  const [eventos, setEventos] = useState([]);
-  const [numerosSemaforos, setNumerosSemaforos] = useState([]);
-  const [tiemposPorCiclo, setTiemposPorCiclo] = useState([]);
+  const [escenarios, setEscenarios] = useState(Array(10).fill(0));
+  const [tiempos, setTiempos] = useState([Array(10).fill(0)]);
+  const [eventos, setEventos] = useState([{ hora: 0, minuto: 0, cicloSeleccionado: 1, offset: 0 }]);
+  const [numerosSemaforos, setNumerosSemaforos] = useState(Array(10).fill(0));
+  const [tiemposPorCiclo, setTiemposPorCiclo] = useState([Array(10).fill(0)]);
+  const [jsonInput, setJsonInput] = useState('');
+  
+
 
   const etiquetas = [
     "Escenario P",
@@ -62,30 +65,76 @@ const SemaforoBits = () => {
     });
   }, [numEventos]);
 
-  const generateStructuredJSON = () => {
+  const generateStructuredJSON = useCallback(() => {
     const json = {
       fases: {
         "1": [numSemaforos]
       },
       escenarios: {
-        "1": [0, ...escenarios] // Agregar un cero al inicio del array de escenarios
+        "1": [0, ...escenarios]
       },
       ciclos: {},
       eventos: {}
     };
 
-    // Agregar ciclos
-    // Agregar ciclos con un cero al inicio de cada array
     tiemposPorCiclo.forEach((ciclo, index) => {
       json.ciclos[index + 1] = [0, ...ciclo];
     });
 
-    // Agregar eventos
     eventos.forEach((evento, index) => {
       json.eventos[index + 1] = [evento.hora, evento.minuto, evento.cicloSeleccionado, evento.offset];
     });
 
     return JSON.stringify(json, null, 2);
+  }, [numSemaforos, escenarios, tiemposPorCiclo, eventos]);
+
+  useEffect(() => {
+    setJsonInput(generateStructuredJSON());
+  }, [generateStructuredJSON]);
+
+  const handleJsonInputChange = (e) => {
+    setJsonInput(e.target.value);
+  };
+
+  const loadJsonData = () => {
+    try {
+      const parsedJson = JSON.parse(jsonInput);
+      
+      // Actualizar número de semáforos
+      if (parsedJson.fases && parsedJson.fases["1"]) {
+        setNumSemaforos(parsedJson.fases["1"][0]);
+      }
+
+      // Actualizar escenarios
+      if (parsedJson.escenarios && parsedJson.escenarios["1"]) {
+        const newEscenarios = parsedJson.escenarios["1"].slice(1);
+        setEscenarios(newEscenarios);
+        setNumerosSemaforos(newEscenarios);
+        setNumEscenarios(Math.ceil(newEscenarios.length / 10));
+      }
+
+      // Actualizar ciclos y tiempos
+      if (parsedJson.ciclos) {
+        const newCiclos = Object.keys(parsedJson.ciclos).length;
+        setNumCiclos(newCiclos);
+        const newTiempos = Object.values(parsedJson.ciclos).map(ciclo => ciclo.slice(1));
+        setTiempos(newTiempos);
+        setTiemposPorCiclo(newTiempos);
+      }
+
+      // Actualizar eventos
+      if (parsedJson.eventos) {
+        const newEventos = Object.values(parsedJson.eventos).map(([hora, minuto, cicloSeleccionado, offset]) => ({
+          hora, minuto, cicloSeleccionado, offset
+        }));
+        setEventos(newEventos);
+        setNumEventos(newEventos.length);
+      }
+
+    } catch (error) {
+      console.error("Error al cargar JSON:", error);
+      alert("Error al cargar JSON. Por favor, verifique el formato.");
+    }
   };
 
   const handleSemaforosChange = (e) => {
@@ -264,7 +313,7 @@ const SemaforoBits = () => {
                     <span className="cycle-label">Ciclo {cicloIndex + 1}:</span>
                     <input
                       type="number"
-                      value={ciclo[index]}
+                      value={ciclo[index] || 0}
                       onChange={(e) => handleTiempoChange(cicloIndex, index, e.target.value)}
                       className="w-full p-1 border rounded"
                       step="0.001"
@@ -388,9 +437,15 @@ const SemaforoBits = () => {
         <h2 className="text-xl font-semibold mb-3">JSON Estructurado</h2>
         <textarea
           className="w-full h-80 p-2 border rounded"
-          readOnly
-          value={generateStructuredJSON()}
+          value={jsonInput}
+          onChange={handleJsonInputChange}
         />
+        <button
+          onClick={loadJsonData}
+          className="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        >
+          Cargar JSON
+        </button>
       </div>
     </div>
   );
