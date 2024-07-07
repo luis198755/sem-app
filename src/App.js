@@ -13,6 +13,8 @@ const SemaforoBits = () => {
   const [numerosSemaforos, setNumerosSemaforos] = useState(Array(10).fill(0));
   const [tiemposPorCiclo, setTiemposPorCiclo] = useState([Array(10).fill(0)]);
   const [jsonInput, setJsonInput] = useState('');
+  const [auxiliarJson, setAuxiliarJson] = useState('');
+
   
 
 
@@ -94,18 +96,19 @@ const SemaforoBits = () => {
 
   const handleJsonInputChange = (e) => {
     setJsonInput(e.target.value);
+    setAuxiliarJson(e.target.value);  // Update auxiliarJson when input changes
   };
 
-  const loadJsonData = () => {
+  const loadJsonData = useCallback(() => {
     try {
-      const parsedJson = JSON.parse(jsonInput);
+      const parsedJson = JSON.parse(auxiliarJson);
       
-      // Actualizar número de semáforos
+      // Update number of traffic lights
       if (parsedJson.fases && parsedJson.fases["1"]) {
         setNumSemaforos(parsedJson.fases["1"][0]);
       }
 
-      // Actualizar escenarios
+      // Update scenarios
       if (parsedJson.escenarios && parsedJson.escenarios["1"]) {
         const newEscenarios = parsedJson.escenarios["1"].slice(1);
         setEscenarios(newEscenarios);
@@ -113,7 +116,7 @@ const SemaforoBits = () => {
         setNumEscenarios(Math.ceil(newEscenarios.length / 10));
       }
 
-      // Actualizar ciclos y tiempos
+      // Update cycles and times
       if (parsedJson.ciclos) {
         const newCiclos = Object.keys(parsedJson.ciclos).length;
         setNumCiclos(newCiclos);
@@ -122,7 +125,7 @@ const SemaforoBits = () => {
         setTiemposPorCiclo(newTiempos);
       }
 
-      // Actualizar eventos
+      // Update events
       if (parsedJson.eventos) {
         const newEventos = Object.values(parsedJson.eventos).map(([hora, minuto, cicloSeleccionado, offset]) => ({
           hora, minuto, cicloSeleccionado, offset
@@ -131,10 +134,33 @@ const SemaforoBits = () => {
         setNumEventos(newEventos.length);
       }
 
+      // After loading, update jsonInput with the parsed and potentially modified data
+      setJsonInput(JSON.stringify(parsedJson, null, 2));
+
+      // Internally send the JSON
+      //sendJsonInternally(parsedJson);
+
+
     } catch (error) {
       console.error("Error al cargar JSON:", error);
       alert("Error al cargar JSON. Por favor, verifique el formato.");
     }
+  }, [auxiliarJson]);
+
+  const handleLoadJson = () => {
+    loadJsonData(); // Execute immediately
+    setTimeout(() => {
+      loadJsonData(); // Execute again after 1ms
+    }, 1);
+  };
+
+  const sendJsonInternally = (jsonData) => {
+    // This function would handle sending the JSON data internally
+    // For demonstration, we'll just log it to the console
+    console.log("Sending JSON internally:", jsonData);
+    // Here you would typically make an API call or dispatch an action
+    // For example:
+    // api.sendJson(jsonData).then(response => console.log(response));
   };
 
   const handleSemaforosChange = (e) => {
@@ -421,7 +447,7 @@ const SemaforoBits = () => {
           onChange={handleJsonInputChange}
         />
         <button
-          onClick={loadJsonData}
+          onClick={handleLoadJson}
           className="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
         >
           Cargar JSON
