@@ -29,26 +29,26 @@ const SemaforoBits = () => {
     "Ambar"
   ];
 
-  const resetEscenariosYCiclos = useCallback(() => {
-    const totalEscenarios = numEscenarios * 10;
-    setEscenarios(Array(totalEscenarios).fill(0));
-    setNumerosSemaforos(Array(totalEscenarios).fill(0));
+  // const resetEscenariosYCiclos = useCallback(() => {
+  //   const totalEscenarios = numEscenarios * 10;
+  //   //setEscenarios(Array(totalEscenarios).fill(0));
+  //   setNumerosSemaforos(Array(totalEscenarios).fill(0));
   
-    const nuevosTiempos = Array(numCiclos).fill().map(() =>
-      Array(totalEscenarios).fill().map((_, index) => {
-        if (index % 10 === 0) return 0; // Escenario P, editable
-        if (index % 10 === 9) return 3; // Ambar, fijo en 3 segundos
-        return 0.375; // Destello de verde, fijo en 0.375 segundos
-      })
-    );
-    setTiempos(nuevosTiempos);
-    setTiemposPorCiclo(nuevosTiempos);
-  }, [numEscenarios, numCiclos]);
+  //   const nuevosTiempos = Array(numCiclos).fill().map(() =>
+  //     Array(totalEscenarios).fill().map((_, index) => {
+  //       if (index % 10 === 0) return 0; // Escenario P, editable
+  //       if (index % 10 === 9) return 3; // Ambar, fijo en 3 segundos
+  //       return 0.375; // Destello de verde, fijo en 0.375 segundos
+  //     })
+  //   );
+  //   setTiempos(nuevosTiempos);
+  //   setTiemposPorCiclo(nuevosTiempos);
+  // }, [numEscenarios, numCiclos]);
 
 
-  useEffect(() => {
-    resetEscenariosYCiclos();
-  }, [numSemaforos, resetEscenariosYCiclos]);
+  // useEffect(() => {
+  //   resetEscenariosYCiclos();
+  // }, [numSemaforos, resetEscenariosYCiclos]);
 
   useEffect(() => {
     setEventos(prevEventos => {
