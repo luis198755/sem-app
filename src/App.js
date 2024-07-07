@@ -15,9 +15,6 @@ const SemaforoBits = () => {
   const [jsonInput, setJsonInput] = useState('');
   const [auxiliarJson, setAuxiliarJson] = useState('');
 
-  
-
-
   const etiquetas = [
     "Escenario P",
     "Destello de verde",
@@ -30,6 +27,24 @@ const SemaforoBits = () => {
     "Destello de verde",
     "Ambar"
   ];
+
+  const loadJsonFromUrl = useCallback(async () => {
+    try {
+      const response = await fetch('/random');
+      const jsonData = await response.json();
+      const formattedJson = JSON.stringify(jsonData, null, 2);
+      setJsonInput(formattedJson);
+      setAuxiliarJson(formattedJson);
+      loadJsonData(jsonData);
+    } catch (error) {
+      console.error("Error loading JSON from URL:", error);
+      alert("Error loading JSON from URL. Please check the console for details.");
+    }
+  }, []);
+
+  useEffect(() => {
+    loadJsonFromUrl();
+  }, [loadJsonFromUrl]);
 
   const resetEscenariosYCiclos = useCallback(() => {
     const totalEscenarios = numEscenarios * 10;
@@ -99,10 +114,8 @@ const SemaforoBits = () => {
     setAuxiliarJson(e.target.value);  // Update auxiliarJson when input changes
   };
 
-  const loadJsonData = useCallback(() => {
+  const loadJsonData = useCallback((parsedJson) => {
     try {
-      const parsedJson = JSON.parse(auxiliarJson);
-      
       // Update number of traffic lights
       if (parsedJson.fases && parsedJson.fases["1"]) {
         setNumSemaforos(parsedJson.fases["1"][0]);
@@ -134,23 +147,19 @@ const SemaforoBits = () => {
         setNumEventos(newEventos.length);
       }
 
-      // After loading, update jsonInput with the parsed and potentially modified data
-      setJsonInput(JSON.stringify(parsedJson, null, 2));
-
-      // Internally send the JSON
-      //sendJsonInternally(parsedJson);
+      console.error(`Execute LoadJSON`);
 
 
     } catch (error) {
       console.error("Error al cargar JSON:", error);
       alert("Error al cargar JSON. Por favor, verifique el formato.");
     }
-  }, [auxiliarJson]);
+  }, []);
 
   const handleLoadJson = () => {
-    loadJsonData(); // Execute immediately
+    loadJsonData(JSON.parse(auxiliarJson));
     setTimeout(() => {
-      loadJsonData(); // Execute again after 1ms
+    loadJsonData(JSON.parse(auxiliarJson));   // Execute again after 1ms
     }, 1);
   };
 
