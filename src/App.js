@@ -194,26 +194,6 @@ const SemaforoBits = () => {
     });
   };
 
-  const handleInputChange = (escenarioIndex, e) => {
-    let valor = parseInt(e.target.value, 10);
-    if (!isNaN(valor)) {
-      valor = valor >>> 0;
-      setEscenarios(prevEscenarios => {
-        const newEscenarios = [...prevEscenarios];
-        newEscenarios[escenarioIndex] = valor;
-
-        // Update numerosSemaforos when changing input
-        setNumerosSemaforos(prevNumeros => {
-          const newNumeros = [...prevNumeros];
-          newNumeros[escenarioIndex] = valor;
-          return newNumeros;
-        });
-
-        return newEscenarios;
-      });
-    }
-  };
-
   const renderSemaforos = (numero, escenarioIndex) => {
     return [...Array(numSemaforos)].map((_, index) => {
       const redBit = 31 - index * 3;
