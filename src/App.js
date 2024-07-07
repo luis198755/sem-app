@@ -26,21 +26,11 @@ const SemaforoBits = () => {
     "Ambar"
   ];
 
-  const resetAllValues = useCallback(() => {
+  const resetEscenariosYCiclos = useCallback(() => {
     const totalEscenarios = numEscenarios * 10;
-    setEscenarios(prevEscenarios => {
-      if (prevEscenarios.length === totalEscenarios) {
-        return prevEscenarios;
-      }
-      return Array(totalEscenarios).fill(0);
-    });
-    setNumerosSemaforos(prevNumeros => {
-      if (prevNumeros.length === totalEscenarios) {
-        return prevNumeros;
-      }
-      return Array(totalEscenarios).fill(0);
-    });
-
+    setEscenarios(Array(totalEscenarios).fill(0));
+    setNumerosSemaforos(Array(totalEscenarios).fill(0));
+  
     const nuevosTiempos = Array(numCiclos).fill().map(() =>
       Array(totalEscenarios).fill().map((_, index) => {
         if (index % 10 === 0) return 0; // Escenario P, editable
@@ -54,8 +44,8 @@ const SemaforoBits = () => {
 
 
   useEffect(() => {
-    resetAllValues();
-  }, [numSemaforos, resetAllValues]);
+    resetEscenariosYCiclos();
+  }, [numSemaforos, resetEscenariosYCiclos]);
 
   useEffect(() => {
     setEventos(prevEventos => {
