@@ -28,8 +28,18 @@ const SemaforoBits = () => {
 
   const resetAllValues = useCallback(() => {
     const totalEscenarios = numEscenarios * 10;
-    setEscenarios(Array(totalEscenarios).fill(0));
-    setNumerosSemaforos(Array(totalEscenarios).fill(0));
+    setEscenarios(prevEscenarios => {
+      if (prevEscenarios.length === totalEscenarios) {
+        return prevEscenarios;
+      }
+      return Array(totalEscenarios).fill(0);
+    });
+    setNumerosSemaforos(prevNumeros => {
+      if (prevNumeros.length === totalEscenarios) {
+        return prevNumeros;
+      }
+      return Array(totalEscenarios).fill(0);
+    });
 
     const nuevosTiempos = Array(numCiclos).fill().map(() =>
       Array(totalEscenarios).fill().map((_, index) => {
@@ -40,18 +50,27 @@ const SemaforoBits = () => {
     );
     setTiempos(nuevosTiempos);
     setTiemposPorCiclo(nuevosTiempos);
+  }, [numEscenarios, numCiclos]);
 
-    setEventos(Array(numEventos).fill().map(() => ({
-      hora: 0,
-      minuto: 0,
-      cicloSeleccionado: 1,
-      offset: 0
-    })));
-  }, [numEscenarios, numCiclos, numEventos]);
 
   useEffect(() => {
     resetAllValues();
   }, [numSemaforos, resetAllValues]);
+
+  useEffect(() => {
+    setEventos(prevEventos => {
+      const newEventos = [...prevEventos];
+      while (newEventos.length < numEventos) {
+        newEventos.push({
+          hora: 0,
+          minuto: 0,
+          cicloSeleccionado: 1,
+          offset: 0
+        });
+      }
+      return newEventos.slice(0, numEventos);
+    });
+  }, [numEventos]);
 
   const generateStructuredJSON = () => {
     const json = {
