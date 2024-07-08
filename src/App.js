@@ -30,7 +30,7 @@ const SemaforoBits = () => {
 
   const loadJsonFromUrl = useCallback(async () => {
     try {
-      const response = await fetch('/random');
+      const response = await fetch('/static');
       const jsonData = await response.json();
       const formattedJson = JSON.stringify(jsonData, null, 2);
       setJsonInput(formattedJson);
@@ -93,15 +93,15 @@ const SemaforoBits = () => {
       ciclos: {},
       eventos: {}
     };
-
+  
     tiemposPorCiclo.forEach((ciclo, index) => {
-      json.ciclos[index + 1] = [0, ...ciclo];
+        json.ciclos[index + 1] = [0, ...ciclo];
     });
-
+  
     eventos.forEach((evento, index) => {
-      json.eventos[index + 1] = [evento.hora, evento.minuto, evento.cicloSeleccionado, evento.offset];
-    });
-
+        json.eventos[index + 1] = [evento.hora, evento.minuto, evento.cicloSeleccionado, evento.offset];
+      });
+  
     return JSON.stringify(json, null, 2);
   }, [numSemaforos, escenarios, tiemposPorCiclo, eventos]);
 
@@ -120,7 +120,7 @@ const SemaforoBits = () => {
       if (parsedJson.fases && parsedJson.fases["1"]) {
         setNumSemaforos(parsedJson.fases["1"][0]);
       }
-
+  
       // Update scenarios
       if (parsedJson.escenarios && parsedJson.escenarios["1"]) {
         const newEscenarios = parsedJson.escenarios["1"].slice(1);
@@ -128,28 +128,57 @@ const SemaforoBits = () => {
         setNumerosSemaforos(newEscenarios);
         setNumEscenarios(Math.ceil(newEscenarios.length / 10));
       }
-
+  
       // Update cycles and times
       if (parsedJson.ciclos) {
-        const newCiclos = Object.keys(parsedJson.ciclos).length;
-        setNumCiclos(newCiclos);
-        const newTiempos = Object.values(parsedJson.ciclos).map(ciclo => ciclo.slice(1));
-        setTiempos(newTiempos);
-        setTiemposPorCiclo(newTiempos);
+        const validCiclos = Object.entries(parsedJson.ciclos).filter(([_, ciclo]) => 
+          ciclo.slice(1).some(value => value !== null && value !== undefined && value !== '')
+        );
+  
+        if (validCiclos.length > 0) {
+          setNumCiclos(validCiclos.length);
+          const newTiempos = validCiclos.map(([_, ciclo]) => ciclo.slice(1));
+          setTiempos(newTiempos);
+          setTiemposPorCiclo(newTiempos);
+        } else {
+          setNumCiclos(1);
+          setTiempos([[]]);
+          setTiemposPorCiclo([[]]);
+        }
+      } else {
+        setNumCiclos(1);
+        setTiempos([[]]);
+        setTiemposPorCiclo([[]]);
       }
-
+  
       // Update events
       if (parsedJson.eventos) {
-        const newEventos = Object.values(parsedJson.eventos).map(([hora, minuto, cicloSeleccionado, offset]) => ({
-          hora, minuto, cicloSeleccionado, offset
-        }));
-        setEventos(newEventos);
-        setNumEventos(newEventos.length);
+        const validEventos = Object.entries(parsedJson.eventos)
+          .filter(([_, evento]) => 
+            evento.length === 4 && 
+            evento.some(value => value !== 0 && value !== null && value !== undefined)
+          )
+          .map(([_, [hora, minuto, cicloSeleccionado, offset]]) => ({
+            hora: hora ?? 0,
+            minuto: minuto ?? 0,
+            cicloSeleccionado: cicloSeleccionado ?? 1,
+            offset: offset ?? 0
+          }));
+  
+        if (validEventos.length > 0) {
+          setEventos(validEventos);
+          setNumEventos(validEventos.length);
+        } else {
+          setEventos([{ hora: 0, minuto: 0, cicloSeleccionado: 1, offset: 0 }]);
+          setNumEventos(1);
+        }
+      } else {
+        setEventos([{ hora: 0, minuto: 0, cicloSeleccionado: 1, offset: 0 }]);
+        setNumEventos(1);
       }
-
-      console.error(`Execute LoadJSON`);
-
-
+  
+      console.log(`Execute LoadJSON`);
+  
     } catch (error) {
       console.error("Error al cargar JSON:", error);
       alert("Error al cargar JSON. Por favor, verifique el formato.");
