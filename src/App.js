@@ -95,12 +95,13 @@ const SemaforoBits = () => {
     };
   
     tiemposPorCiclo.forEach((ciclo, index) => {
-        json.ciclos[index + 1] = [0, ...ciclo];
+      // Convert seconds to milliseconds
+      json.ciclos[index + 1] = [0, ...ciclo.map(tiempo => Math.round(tiempo * 1000))];
     });
   
     eventos.forEach((evento, index) => {
-        json.eventos[index + 1] = [evento.hora, evento.minuto, evento.cicloSeleccionado, evento.offset];
-      });
+      json.eventos[index + 1] = [evento.hora, evento.minuto, evento.cicloSeleccionado, evento.offset];
+    });
   
     return JSON.stringify(json, null, 2);
   }, [numSemaforos, escenarios, tiemposPorCiclo, eventos]);
@@ -134,10 +135,12 @@ const SemaforoBits = () => {
         const validCiclos = Object.entries(parsedJson.ciclos).filter(([_, ciclo]) => 
           ciclo.slice(1).some(value => value !== null && value !== undefined && value !== '')
         );
-  
+      
         if (validCiclos.length > 0) {
           setNumCiclos(validCiclos.length);
-          const newTiempos = validCiclos.map(([_, ciclo]) => ciclo.slice(1));
+          const newTiempos = validCiclos.map(([_, ciclo]) => 
+            ciclo.slice(1).map(tiempo => tiempo / 1000) // Convert milliseconds to seconds
+          );
           setTiempos(newTiempos);
           setTiemposPorCiclo(newTiempos);
         } else {
