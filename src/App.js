@@ -451,7 +451,7 @@ const SemaforoBits = () => {
         ))}
       </div>
 
-      <div className="mb-6">
+      {/* <div className="mb-6">
         <h2 className="text-xl font-semibold mb-3">Escenarios</h2>
         <textarea
           className="w-full h-40 p-2 border rounded"
@@ -480,12 +480,12 @@ const SemaforoBits = () => {
             `Evento${index + 1} = [${evento.hora}, ${evento.minuto}, ${evento.cicloSeleccionado}, ${evento.offset}]`
           ).join('\n')}
         />
-      </div>
+      </div> */}
 
       <div className="mb-6">
-        <h2 className="text-xl font-semibold mb-3">JSON Estructurado</h2>
+        <h2 className="text-xl font-semibold mb-3">JSON</h2>
         <textarea
-          className="w-full h-80 p-2 border rounded"
+          className="w-full h-40 p-2 border rounded"
           value={jsonInput}
           onChange={handleJsonInputChange}
         />
