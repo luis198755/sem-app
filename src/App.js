@@ -287,9 +287,9 @@ const SemaforoBits = () => {
 
 
   const getEtiquetaColor = (etiqueta) => {
-    if (etiqueta.startsWith("Escenario P")) return "bg-blue-200";
-    if (etiqueta === "Destello de verde") return "bg-green-200";
-    if (etiqueta === "Ambar") return "bg-yellow-200";
+    if (etiqueta.startsWith("Escenario P")) return "bg-blue-400";
+    if (etiqueta === "Destello de verde") return "bg-green-400";
+    if (etiqueta === "Ambar") return "bg-yellow-400";
     return "bg-gray-200";
   };
 
@@ -343,9 +343,11 @@ const SemaforoBits = () => {
         const etiquetaColorClass = getEtiquetaColor(etiqueta);
         return (
           <div key={index} className="mb-8 p-4 border-t">
-            <h3 className={`text-xl font-medium mb-3 p-3 rounded ${etiquetaColorClass}`}>
-              Escenario {index + 1} - {etiqueta}
-            </h3>
+            <div className="flex justify-center items-center mb-3">
+              <h3 className={`text-xl font-medium p-3 rounded ${etiquetaColorClass}`}>
+                Escenario {index + 1} - {etiqueta}
+              </h3>
+            </div>
             <div className="traffic-lights-container flex flex-wrap justify-center">
               {renderSemaforos(numero, index)}
             </div>
