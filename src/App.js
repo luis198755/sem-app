@@ -265,7 +265,7 @@ const SemaforoBits = () => {
       const greenBit = 29 - index * 3;
       return (
         <div key={index} className="traffic-light-container">
-          <div className="traffic-light-label">S{index + 1}</div>
+          <div className="traffic-light-label">F{index + 1}</div>
           <div className="traffic-light flex flex-col items-center justify-between bg-gray-200 rounded-full">
             <div
               className={`light red ${getBitValue(numero, redBit) ? 'bg-red-500' : 'bg-gray-400'} cursor-pointer rounded-full`}
@@ -432,7 +432,7 @@ const SemaforoBits = () => {
                 </select>
               </div>
               <div>
-                <label htmlFor={`offset-${index}`} className="block mb-1">Offset (segundos):</label>
+                <label htmlFor={`offset-${index}`} className="block mb-1">Sincronía (segundos):</label>
                 <input
                   type="number"
                   id={`offset-${index}`}
