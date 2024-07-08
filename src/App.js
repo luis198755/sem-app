@@ -295,9 +295,9 @@ const SemaforoBits = () => {
 
   return (
     <div className="p-4 mx-auto">
-      <h1 className="text-2xl font-bold mb-4">Semáforos de Bits Interactivos (Con Ciclos, Tiempos y Eventos)</h1>
+      <h1 className="text-2xl font-bold mb-4">Interfaz de Programación Centurión</h1>
       <div className="mb-4">
-        <label htmlFor="numSemaforos" className="block mb-2">Número de semáforos a mostrar:</label>
+        <label htmlFor="numSemaforos" className="block mb-2">Número Fases:</label>
         <select
           id="numSemaforos"
           value={numSemaforos}
