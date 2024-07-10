@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import './App.css';  // Add this line at the top of your component file
 
-
+// Comentarios
 const SemaforoBits = () => {
   const [numSemaforos, setNumSemaforos] = useState(10);
   const [numEscenarios, setNumEscenarios] = useState(1);
